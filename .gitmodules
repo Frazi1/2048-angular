@@ -1,0 +1,15 @@
+[submodule "server/src/plugins/controller_plugin"]
+	path = server/src/plugins/controller_plugin
+	url = https://github.com/Frazi1/Bottle-Controller-Plugin
+[submodule "server/src/plugins/query_parser_plugin"]
+	path = server/src/plugins/query_parser_plugin
+	url = https://github.com/Frazi1/Bottle-Query-Parser-Plugin.git
+[submodule "server/src/plugins/pyjson_plugin"]
+	path = server/src/plugins/pyjson_plugin
+	url = https://github.com/Frazi1/Bottle-PyJson-Plugin
+[submodule "server/src/plugins/sqlalchemy_session_manager_plugin"]
+	path = server/src/plugins/sqlalchemy_session_manager_plugin
+	url = https://github.com/Frazi1/Bottle-SQLAlchemy-Session-Manager-Plugin
+[submodule "server/src/plugins/pyjson"]
+	path = server/src/plugins/pyjson
+	url = https://github.com/Frazi1/pyjson
