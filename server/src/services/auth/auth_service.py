@@ -4,18 +4,18 @@ from typing import Optional
 from bottle import request
 
 from controllers.business_exception import BusinessException
-from dto.user_dto import UserDto
+from database.models.user import User
+from dto.user_dto import UserDto, UserRegistrationDto
 from services.auth.member import Member
 from services.base_service import BaseService
 
 
 class AuthService(BaseService):
-    USERS = {"test": "test"}
 
     def get_user_by_id(self, login) -> Optional[Member]:
-        if login in self.USERS:
-            password = self.USERS[login]
-            return Member(login, password)
+        user = self.db.query(User).filter(User.login == login).first()
+        if user:
+            return Member(user.login, user.password_hash)
         return None
 
     def login_basic(self, auth_header: str) -> UserDto:
@@ -29,18 +29,20 @@ class AuthService(BaseService):
 
         member = self.get_user_by_id(login)
         if not member:
-            raise BusinessException("User {} does not exist.".format(member.login))
+            raise BusinessException("User {} does not exist.".format(login))
         if password != member.password:
             raise BusinessException("Password is incorrect.")
 
         return UserDto(member.login)
 
-    def register(self, login: str, password: str) -> Member:
+    def register(self, user_registration: UserRegistrationDto) -> Member:
+        login, password = user_registration.login, user_registration.password
         member = self.get_user_by_id(login)
         if member:
             raise BusinessException("User {} already exists.".format(member.login))
-
-        self.USERS[login] = password
+        user = User(login=login, password_hash=password)
+        self.db.add(user)
+        self.db.commit()
         return Member(login, password)
 
     @property

@@ -2,17 +2,21 @@ from bottle import Bottle, run
 
 from console_logger import ConsoleLogger
 from controllers.auth_controller import AuthController
+from plugins.sqlalchemy_session_manager_plugin.bottle_sqlalchemy_session_manager_plugin import \
+    BottleSQLAlchemySessionPlugin
 from services.auth.auth_service import AuthService
-from src.plugins.controller_plugin.controller_plugin import ControllerPlugin
-from src.plugins.plugins import JsonPlugin, EnableCors, AuthPlugin, ErrorFilterPlugin
-from src.plugins.pyjson.pyjson import PyJsonConverter
-from src.plugins.pyjson_plugin.pyjson_plugin import BottlePyJsonPlugin
+from plugins.controller_plugin.controller_plugin import ControllerPlugin
+from plugins.plugins import JsonPlugin, EnableCors, AuthPlugin, ErrorFilterPlugin
+from plugins.pyjson.pyjson import PyJsonConverter
+from plugins.pyjson_plugin.pyjson_plugin import BottlePyJsonPlugin
+from db import ENGINE
 
 app = Bottle(autojson=False)
 
 auth_service = AuthService()
 app.install(JsonPlugin())
 app.install(ErrorFilterPlugin())
+app.install(BottleSQLAlchemySessionPlugin(engine=ENGINE, commit=False, create_session_by_default=True))
 app.install(AuthPlugin(auth_service))
 app.install(EnableCors())
 converter = PyJsonConverter()

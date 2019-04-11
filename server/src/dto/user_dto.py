@@ -8,3 +8,14 @@ class UserDto(BaseJsonable):
 
     def __init__(self, login):
         self.login = login
+
+
+class UserRegistrationDto(BaseJsonable):
+    __exportables__ = {
+        "login": JsonProperty(str),
+        "password": JsonProperty(str)
+    }
+
+    def __init__(self, login: str="", password: str=""):
+        self.login = login
+        self.password = password
