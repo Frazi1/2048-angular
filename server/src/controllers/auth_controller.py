@@ -1,7 +1,6 @@
-from bottle import request
-
 from dto.user_dto import UserDto
-from services.auth_service import AuthService
+from plugins.plugins import login_required
+from services.auth.auth_service import AuthService
 from src.plugins.controller_plugin.controller_plugin import BaseController
 
 
@@ -12,6 +11,12 @@ class AuthController(BaseController):
         self.auth_service = auth_service
 
     @BaseController.post('login', returns=UserDto)
+    @login_required
     def login(self):
-        auth_header = request.headers["Authorization"]
-        return self.auth_service.login_basic(auth_header)
+        member = self.auth_service.current_member
+        return UserDto(member.login)
+
+    @BaseController.get('test')
+    @login_required
+    def test(self):
+        return "HELLO"
