@@ -1,11 +1,4 @@
 import { Component, OnInit } from '@angular/core'
-
-
-// import { enableNavbarToggle, toggleMainNavbar, triggerModal } from 'styles/bulma-helpers'
-
-// import 'styles/bulma.sass'
-// import 'styles/open-iconic.css'
-// import 'styles/app.less'
 import { Direction } from './game/enums'
 import { DefaultRandom } from './helpers/random'
 import { Game2048 } from './game/game2048'
@@ -13,6 +6,7 @@ import { RenderConsole } from './render-console/render-console'
 import { RenderSVG } from './render-svg/render-svg'
 import { ensure } from './helpers/syntax'
 import { enableNavbarToggle, toggleMainNavbar, triggerModal } from './styles/bulma-helpers'
+
 
 const GAME_STATE_LOCALSTORAGE_KEY = 'game_state_11'
 declare const Mousetrap: any
@@ -24,7 +18,7 @@ declare const Mousetrap: any
 })
 export class AppComponent implements OnInit {
   title = 'client'
-  const
+  game: Game2048
 
 
   async gameMain() {
@@ -32,14 +26,10 @@ export class AppComponent implements OnInit {
     ensure(document.getElementById('loading-indicator')).remove()
     ensure(document.getElementById('game-content')).style.visibility = 'visible'
 
-    const game = new Game2048(4, new DefaultRandom())
-    const renderConsole = new RenderConsole(game)
-    const renderSVG = new RenderSVG(game)
-    const moveAction = function (direction: Direction) {
-      return function () {
-        game.queueAction({type: 'MOVE', direction})
-      }
-    }
+    this.game = new Game2048(4, new DefaultRandom())
+    const renderConsole = new RenderConsole(this.game)
+    const renderSVG = new RenderSVG(this.game)
+    const moveAction = (direction: Direction) => () => this.game.queueAction({type: 'MOVE', direction})
 
     Mousetrap.bind('up', moveAction(Direction.Up))
     Mousetrap.bind('down', moveAction(Direction.Down))
@@ -64,8 +54,8 @@ export class AppComponent implements OnInit {
     )
     ensure(document.getElementById('btn-new-game')).addEventListener(
       'click',
-      function () {
-        game.queueAction({type: 'START', serializedState: ''})
+      () => {
+        this.game.queueAction({type: 'START', serializedState: ''})
         // toggleMainNavbar()
       }
     )
@@ -102,14 +92,14 @@ export class AppComponent implements OnInit {
     // })
 
     await Promise.all([renderConsole.init(), renderSVG.init()])
-    game.queueAction({
+    this.game.queueAction({
       type: 'START',
       serializedState:
             window.localStorage.getItem(GAME_STATE_LOCALSTORAGE_KEY) || ''
     })
     while (true) {
-      const gameUpdates = await game.processAction()
-      const serializedState = game.serialize()
+      const gameUpdates = await this.game.processAction()
+      const serializedState = this.game.serialize()
       window.localStorage.setItem(GAME_STATE_LOCALSTORAGE_KEY, serializedState)
       await Promise.all([
         renderConsole.update(gameUpdates),

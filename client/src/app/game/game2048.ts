@@ -1,4 +1,3 @@
-
 import { Action } from './actions'
 import {
   GameEvent, GameOverEvent, GameStartedEvent, TileCreatedEvent, TileDeletedEvent, TileMergeEvent, TileMoveEvent,
@@ -56,7 +55,7 @@ export class Game2048 {
     this.userActionsQueue.push(action)
   }
 
-  public async processAction() {
+  public async processAction(): Promise<GameEvent[]> {
     while (this.userActionsQueue.length === 0) {
       await stay(100)
     }
@@ -65,7 +64,7 @@ export class Game2048 {
     return this.processSingleAction(action)
   }
 
-  private processSingleAction(action: Action) {
+  private processSingleAction(action: Action): GameEvent[] {
     const gameEvents: GameEvent[] = []
     if (action.type === 'MOVE') {
       gameEvents.push(...this.processMoveAction(action.direction))
@@ -171,7 +170,7 @@ export class Game2048 {
 
       // Here we need to check if game grid is full - so might be game is finished if there is no possibility to make a movement
       const availTitles = this.grid.availableCells()
-      if (availTitles.length == 0) {
+      if (availTitles.length === 0) {
         // Check if there are possible movements
         const weHaveSomePossibleEvents =
                 this.calculateMoveEvents(Direction.Up).length > 0 ||
