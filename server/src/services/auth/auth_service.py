@@ -4,7 +4,7 @@ from typing import Optional
 from bottle import request
 
 from controllers.business_exception import BusinessException
-from database.models.user import User
+from database.models.db_user import DbUser
 from dto.user_dto import UserDto, UserRegistrationDto
 from services.auth.member import Member
 from services.base_service import BaseService
@@ -13,7 +13,7 @@ from services.base_service import BaseService
 class AuthService(BaseService):
 
     def get_user_by_id(self, login) -> Optional[Member]:
-        user = self.db.query(User).filter(User.login == login).first()
+        user = self.db.query(DbUser).filter(DbUser.login == login).first()
         if user:
             return Member(user.login, user.password_hash)
         return None
@@ -29,7 +29,7 @@ class AuthService(BaseService):
 
         member = self.get_user_by_id(login)
         if not member:
-            raise BusinessException("User {} does not exist.".format(login))
+            raise BusinessException("DbUser {} does not exist.".format(login))
         if password != member.password:
             raise BusinessException("Password is incorrect.")
 
@@ -39,8 +39,8 @@ class AuthService(BaseService):
         login, password = user_registration.login, user_registration.password
         member = self.get_user_by_id(login)
         if member:
-            raise BusinessException("User {} already exists.".format(member.login))
-        user = User(login=login, password_hash=password)
+            raise BusinessException("DbUser {} already exists.".format(member.login))
+        user = DbUser(login=login, password_hash=password)
         self.db.add(user)
         self.db.commit()
         return Member(login, password)

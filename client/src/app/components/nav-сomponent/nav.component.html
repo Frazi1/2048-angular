@@ -1,0 +1,45 @@
+<nav aria-label="main navigation" class="navbar level" role="navigation">
+  <div class="navbar-brand">
+    <span class="navbar-item has-text-weight-bold"> 2048 Game </span>
+    <span *ngIf="loginService.isAuthenticated()" class="navbar-item">Hello, <span class="has-text-weight-bold">
+      {{loginService.userName}}</span>!
+    </span>
+    <!--<span class="navbar-item has-text-weight-normal">Score: {{game?.getScores()}}</span>-->
+    <a
+      aria-expanded="false"
+      aria-label="menu"
+      class="navbar-burger burger"
+      data-target="navbarBasicExample"
+      role="button"
+    >
+      <span aria-hidden="true"></span> <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div class="navbar-menu" id="navbarBasicExample">
+    <div class="navbar-end">
+      <a [routerLink]="['/']" class="navbar-item" id="btn-new-game">
+        <span class="icon is-large">
+          <span class="oi" data-glyph="reload"></span>
+        </span>
+        New game
+      </a>
+      <a class="navbar-item" id="btn-about">
+        <span class="icon is-large">
+          <span class="oi" data-glyph="info"></span>
+        </span>
+        About
+      </a>
+      <a [routerLink]="['/leaderboards']" class="navbar-item">
+        Leaderboards
+      </a>
+      <a *ngIf="!loginService.isAuthenticated()" [routerLink]="['/login']" class="navbar-item">
+        Login
+      </a>
+      <a *ngIf="loginService.isAuthenticated()" (click)="loginService.logout()" class="navbar-item">
+        Logout
+      </a>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,15 @@
+<ngx-smart-modal #gameOverModal identifier="gameOverModal">
+  <h1>Игра окончена!</h1>
+  <h2>Вы набрали {{getScore()}} очков. Хотите сохранить результат?</h2>
+
+
+  <div>
+    <label>
+      <input [(ngModel)]="login">
+    </label>
+  </div>
+  <div>
+    <button (click)="close()">Закрыть</button>
+    <button (click)="saveResult()">Сохранить</button>
+  </div>
+</ngx-smart-modal>

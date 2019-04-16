@@ -16,6 +16,17 @@ class UserRegistrationDto(BaseJsonable):
         "password": JsonProperty(str)
     }
 
-    def __init__(self, login: str="", password: str=""):
+    def __init__(self, login: str = "", password: str = ""):
         self.login = login
         self.password = password
+
+
+class GameResult(BaseJsonable):
+    __exportables__ = {
+        "login": JsonProperty(str),
+        "score": JsonProperty(int)
+    }
+
+    def __init__(self, login: str = "", score=0):
+        self.login = login
+        self.score = score

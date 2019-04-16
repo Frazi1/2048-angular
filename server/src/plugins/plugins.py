@@ -35,8 +35,8 @@ class EnableCors(object):
             # set CORS headers
             response.headers['Access-Control-Allow-Origin'] = '*'
             response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
-            response.headers[
-                'Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+            response.headers['Access-Control-Allow-Headers'] = '*'
+            # response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
 
             if request.method != 'OPTIONS':
                 # actual request; reply with the actual response
@@ -55,6 +55,15 @@ class ErrorFilterPlugin(object):
                 return fn(*args, **kwargs)
             except AuthException as a:
                 raise HTTPResponse("forbidden", status=401)
+            except Exception as e:
+                message_ = {"error": str(e)}
+                response.status = 400
+                return message_
+            finally:
+                response.headers['Access-Control-Allow-Origin'] = '*'
+                response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, OPTIONS, DELETE'
+                response.headers['Access-Control-Allow-Headers'] = '*'
+
 
         return wrapper
 

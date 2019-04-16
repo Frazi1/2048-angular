@@ -1,0 +1,14 @@
+<table class="table container">
+  <thead>
+  <tr>
+    <th>Username</th>
+    <th>Score</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let row of gameResults$ | async">
+    <td>{{row.login}}</td>
+    <td>{{row.score}}</td>
+  </tr>
+  </tbody>
+</table>

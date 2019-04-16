@@ -6,4 +6,4 @@ class BaseService(object):
 
     @property
     def db(self) -> Session:
-        return request.environ.get('database')
+        return request.environ.get('db')
