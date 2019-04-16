@@ -1,4 +1,6 @@
-from src.plugins.pyjson.pyjson import BaseJsonable, JsonProperty
+import datetime
+
+from plugins.pyjson.pyjson import BaseJsonable, JsonProperty
 
 
 class UserDto(BaseJsonable):
@@ -24,9 +26,11 @@ class UserRegistrationDto(BaseJsonable):
 class GameResult(BaseJsonable):
     __exportables__ = {
         "login": JsonProperty(str),
-        "score": JsonProperty(int)
+        "score": JsonProperty(int),
+        "created_at": JsonProperty(datetime.datetime, "createdAt", required=False)
     }
 
-    def __init__(self, login: str = "", score=0):
+    def __init__(self, login: str = "", score=0, created_at: datetime.datetime = None):
         self.login = login
         self.score = score
+        self.created_at = created_at

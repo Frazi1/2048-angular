@@ -1,7 +1,7 @@
 from dto.user_dto import UserDto, UserRegistrationDto
 from plugins.plugins import login_required
 from services.auth.auth_service import AuthService
-from src.plugins.controller_plugin.controller_plugin import BaseController
+from plugins.controller_plugin.controller_plugin import BaseController
 
 
 class AuthController(BaseController):
