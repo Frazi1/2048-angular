@@ -16,29 +16,24 @@
       <span aria-hidden="true"></span>
     </a>
   </div>
-
+  <div class="navbar-menu">
+    <a (click)="item.action()" *ngFor="let item of navService.actions" class="navbar-item">
+      {{item.buttonText}}
+    </a>
+  </div>
   <div class="navbar-menu" id="navbarBasicExample">
     <div class="navbar-end">
       <a [routerLink]="['/']" class="navbar-item" id="btn-new-game">
-        <span class="icon is-large">
-          <span class="oi" data-glyph="reload"></span>
-        </span>
-        New game
-      </a>
-      <a class="navbar-item" id="btn-about">
-        <span class="icon is-large">
-          <span class="oi" data-glyph="info"></span>
-        </span>
-        About
+        Игра
       </a>
       <a [routerLink]="['/leaderboards']" class="navbar-item">
-        Leaderboards
+        Рекорды
       </a>
       <a *ngIf="!loginService.isAuthenticated()" [routerLink]="['/login']" class="navbar-item">
-        Login
+        Войти
       </a>
-      <a *ngIf="loginService.isAuthenticated()" (click)="loginService.logout()" class="navbar-item">
-        Logout
+      <a (click)="loginService.logout()" *ngIf="loginService.isAuthenticated()" class="navbar-item">
+        Выйти
       </a>
     </div>
   </div>

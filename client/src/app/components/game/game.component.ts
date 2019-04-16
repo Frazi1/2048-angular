@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { enableNavbarToggle } from '../../styles/bulma-helpers'
 import { ensure } from '../../helpers/syntax'
 import { Game2048 } from '../../game/game2048'
@@ -7,6 +7,10 @@ import { RenderConsole } from '../../render-console/render-console'
 import { RenderSVG } from '../../render-svg/render-svg'
 import { Direction } from '../../game/enums'
 import { GameOverEvent } from '../../game/events'
+import { NavService } from '../../services/nav.service'
+import { GameService } from '../../services/game.service'
+import { GameResult } from '../../dtos/GameResult'
+import { LoginService } from '../../services/login.service'
 
 const GAME_STATE_LOCALSTORAGE_KEY = 'game_state_11'
 declare const Mousetrap: any
@@ -16,12 +20,18 @@ declare const Mousetrap: any
   templateUrl: './game.component.html',
   styleUrls:   ['./game.component.less']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
   game: Game2048 = new Game2048(4, new DefaultRandom())
 
-  constructor() { }
+  navItemsIds = []
+
+  constructor(private navService: NavService,
+              private gameService: GameService,
+              private loginService: LoginService) { }
 
   async ngOnInit() {
+    const actionButton = this.navService.addActionButton('Новая игра', () => this.startNewGame())
+    this.navItemsIds.push(actionButton)
     await this.gameMain()
   }
 
@@ -57,10 +67,7 @@ export class GameComponent implements OnInit {
     // )
     ensure(document.getElementById('btn-new-game')).addEventListener(
       'click',
-      () => {
-        this.game.queueAction({type: 'START', serializedState: ''})
-        // toggleMainNavbar()
-      }
+      () => this.startNewGame
     )
 
     // const hammer = new Hammer(document.body, {
@@ -107,7 +114,15 @@ export class GameComponent implements OnInit {
     }
   }
 
-  public async restart() {
+  public ngOnDestroy(): void {
+    this.navItemsIds.forEach(id => this.navService.removeActionButton(id))
+  }
+
+  private startNewGame() {
+    if (this.loginService.isAuthenticated()) {
+      this.gameService.postResult(new GameResult(this.loginService.userName, this.game.getScores()))
+          .subscribe()
+    }
     this.game.queueAction({type: 'START', serializedState: ''})
   }
 }

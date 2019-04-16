@@ -1,14 +1,16 @@
 <table class="table container">
   <thead>
   <tr>
-    <th>Username</th>
-    <th>Score</th>
+    <th>Игрок</th>
+    <th>Очки</th>
+    <th>Дата</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let row of gameResults$ | async">
     <td>{{row.login}}</td>
     <td>{{row.score}}</td>
+    <td>{{row.createdAt | date:'medium'}}</td>
   </tr>
   </tbody>
 </table>

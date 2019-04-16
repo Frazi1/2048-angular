@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core'
 import { LoginService } from '../../services/login.service'
+import { NavService } from '../../services/nav.service'
 
 @Component({
   selector:    'app-nav',
@@ -8,7 +9,8 @@ import { LoginService } from '../../services/login.service'
 })
 export class NavComponent implements OnInit {
 
-  constructor(private loginService: LoginService) { }
+  constructor(private loginService: LoginService,
+              private navService: NavService) { }
 
   ngOnInit() {
     console.log('nav-сomponent component loaded')

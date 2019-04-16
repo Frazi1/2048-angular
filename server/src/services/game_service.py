@@ -13,5 +13,5 @@ class GameService(BaseService):
         return db_result.id
 
     def get_results(self)-> List[GameResult]:
-        db_results = self.db.query(DbGameResult).all()
-        return [GameResult(x.user_login, x.score) for x in db_results]
+        db_results = self.db.query(DbGameResult).order_by(DbGameResult.score.desc(), DbGameResult.created_at).all()
+        return [GameResult(x.user_login, x.score, x.created_at) for x in db_results]
