@@ -7,7 +7,8 @@ import { LoginComponent } from './components/login/login.component'
 const routes: Routes = [
   {path: '', component: GameComponent},
   {path: 'leaderboards', component: LeaderboarsComponent},
-  {path: 'login', component: LoginComponent}
+  {path: 'login', component: LoginComponent},
+  {path: 'signup', component: LoginComponent, data: {isRegistrationState: true}}
 ]
 
 @NgModule({

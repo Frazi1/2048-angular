@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 import { Observable } from 'rxjs'
 import { UserDto } from '../dtos/user-dto'
 import { map, tap } from 'rxjs/operators'
+import { UserRegistrationDto } from '../dtos/user-registration-dto'
 
 @Injectable({
   providedIn: 'root'
@@ -34,6 +35,14 @@ export class LoginService extends BaseService {
                  map(res => this.json.plainToClass(UserDto, res as Object)),
                  tap(res => this._userDto = res)
                )
+  }
+
+  public signUp(login: string, password: string): Observable<UserDto> {
+    const userRegistrationDto = new UserRegistrationDto(login, password)
+    return this.http.post<UserDto>(this.buildUrl('signup'), userRegistrationDto)
+      .pipe(
+        map(res => this.json.plainToClass(UserDto, res as Object))
+      )
   }
 
   public logout(): void {
